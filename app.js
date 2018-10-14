@@ -19,6 +19,8 @@ const request = require("request");
 
 // Using dotenv to allow local running with environment variables
 require('dotenv').load();
+var CHAT_ID_USER = "";
+var CHAT_MESSAGE = "";
 
 var app = express();
 app.set('port', process.env.PORT || 5000);
@@ -206,9 +208,29 @@ app.get('/start/:user', function (req, res) {
 });
 
 app.post("/jira", function(req, res) {
-  console.log("JIRA POST WEBHOOK:", req.body);
+  console.log("JIRA POST WEBHOOK:");// req.body
+  try {
+    var data = req.body;
+    var issue = data.issue;
+    console.log(data.user);
+    CHAT_MESSAGE = issue.key +'\n\n' + issue.fields.description + "\n\n" + issue.self;
+    if (!CHAT_ID_USER) {
+      //CHAT_ID_USER = senderID;
+      //sendStartSurvey(CHAT_ID_USER);
+      sendTextMessage(CHAT_ID_USER,CHAT_MESSAGE);
+    }
+  } catch (e) {
+    // Write out any exceptions for now
+    console.log("JIRA ERROR:");
+    console.error(e);
+  } finally {
+    // Always respond with a 200 OK for handled webhooks, to avoid retries
+    // from Facebook
+    console.log("JIRA FINAL.");
+    res.sendStatus(200);
+  }
   //sendStartSurvey(req.params.user);
-  res.sendStatus(200);
+  //res.sendStatus(200);
 });
 
 /*
@@ -270,7 +292,28 @@ function receivedMessage(event) {
         break;
     }
     return;
+  }else{
+    if (!senderID){
+      CHAT_ID_USER = senderID;
+      sendStartSurvey(CHAT_ID_USER);
+    }
   }
+  //if
+
+}
+
+function sendTextMessage(recipientId, messageText) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: messageText,
+      metadata: "DEVELOPER_DEFINED_METADATA"
+    }
+  };
+
+  callSendAPI(messageData);
 }
 
 /*
@@ -292,7 +335,7 @@ function sendStartSurvey(recipientId) {
         id: body.id
       },
       message: {
-        text: `Hola ${body.first_name}, tu opinion nos importa.\n Podrias responder una encuesta?`,
+        text: `Hola ${body.first_name}, Desea leer el ultimo ACR del tablero?`,
         quick_replies: [{
           content_type: 'text',
           title: 'Yes',
@@ -308,6 +351,7 @@ function sendStartSurvey(recipientId) {
     callSendAPI(messageData);
   });
 }
+
 
 /*
  * Send a message with Quick Reply buttons.

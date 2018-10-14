@@ -318,6 +318,7 @@ function sendFirstQuestion(recipientId) {
         content_type: 'text',
         title: '☹️ 1',
         payload: 'HAPPY:1'
+        
       }, {
         content_type: 'text',
         title: '2',

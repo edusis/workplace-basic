@@ -19,7 +19,8 @@ require('dotenv').load();
 
 var app = express();
 app.set('port', process.env.PORT || 5000);
-app.use(bodyParser.json({ verify: verifyRequestSignature }));
+//app.use(bodyParser.json({ verify: verifyRequestSignature }));
+app.use(bodyParser.json());
 
 /*
  * Be sure to setup your config values before running this code. You can
@@ -54,6 +55,7 @@ app.get('/', function(req, res) {
     console.log('Validating webhook');
     res.status(200).send(req.query['hub.challenge']);
   } else {
+    console.log("Call by GET:",req.query);
     console.error('Failed validation. Make sure the validation tokens match.');
     res.sendStatus(403);
   }
@@ -102,12 +104,15 @@ app.post('/', function (req, res) {
     }
   } catch (e) {
     // Write out any exceptions for now
+    console.log("Call POST2:");
     console.error(e);
   } finally {
     // Always respond with a 200 OK for handled webhooks, to avoid retries
-		// from Facebook
+    // from Facebook
+    console.log("Call POST3:");
     res.sendStatus(200);
   }
+  
 });
 
 function processPageEvents(data) {

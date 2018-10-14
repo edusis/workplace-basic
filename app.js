@@ -214,7 +214,7 @@ app.post("/jira", function(req, res) {
     var issue = data.issue;
     console.log(data.user);
     CHAT_MESSAGE = issue.key +'\n\n' + issue.fields.description + "\n\n" + issue.self;
-    if (!CHAT_ID_USER) {
+    if (CHAT_ID_USER) {
       //CHAT_ID_USER = senderID;
       //sendStartSurvey(CHAT_ID_USER);
       sendTextMessage(CHAT_ID_USER,CHAT_MESSAGE);
@@ -294,7 +294,7 @@ function receivedMessage(event) {
     }
     return;
   }else{
-    if (!senderID){
+    if (senderID){
       CHAT_ID_USER = senderID;
       sendStartSurvey(CHAT_ID_USER);
     }

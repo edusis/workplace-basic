@@ -13,6 +13,7 @@
 const
   bodyParser = require('body-parser'),
   crypto = require('crypto'),
+  
   express = require('express');
 // Using dotenv to allow local running with environment variables
 require('dotenv').load();
@@ -43,7 +44,7 @@ if (!(APP_SECRET && VERIFY_TOKEN && ACCESS_TOKEN)) {
   console.error('Missing config values');
   process.exit(1);
 }
-
+const GRAPH_API_BASE = "https://graph.facebook.com/v2.6";
 /*
  * Check that the verify token used in the Webhook setup is the same token
  * used here.
@@ -112,7 +113,7 @@ app.post('/', function (req, res) {
     console.log("Call POST3:");
     res.sendStatus(200);
   }
-  
+
 });
 
 function processPageEvents(data) {
@@ -121,7 +122,12 @@ function processPageEvents(data) {
 		// Chat messages sent to the page
     if(entry.messaging) {
       entry.messaging.forEach(function(messaging_event){
+
         console.log('Page Messaging Event',page_id,messaging_event);
+        if (messaging_event.message) {
+          receivedMessage(messaging_event);
+        }
+
       });
     }
 		// Page related changes, or mentions of the page
@@ -186,6 +192,178 @@ function verifyRequestSignature(req, res, buf) {
     }
   }
 }
+
+/************************************************************************************/
+/************************************************************************************/
+/************************************************************************************/
+
+app.get('/start/:user', function (req, res) {
+  console.log('Start', req.params.user);
+  sendStartSurvey(req.params.user);
+  res.sendStatus(200);
+});
+
+/*
+ * Message Event
+ *
+ * This event is called when a message is sent to your page. The 'message' 
+ * object format can vary depending on the kind of message that was received.
+ * Read more at https://developers.facebook.com/docs/messenger-platform/webhook-reference/message-received
+ * 
+ */
+function receivedMessage(event) {
+  var senderID = event.sender.id;
+  var recipientID = event.recipient.id;
+  var timeOfMessage = event.timestamp;
+  var message = event.message;
+
+  console.log('Received message for user %d and page %d at %d with message:',
+    senderID, recipientID, timeOfMessage);
+  console.log(JSON.stringify(message));
+
+  var isEcho = message.is_echo;
+  var messageId = message.mid;
+  var appId = message.app_id;
+  var metadata = message.metadata;
+
+  // You may get a text or attachment but not both
+  var quickReply = message.quick_reply;
+
+  if (isEcho) {
+    // Just logging message echoes to console
+    console.log('Received echo for message %s and app %d with metadata %s',
+      messageId, appId, metadata);
+    return;
+  } else if (quickReply) {
+    var quickReplyPayload = quickReply.payload;
+    console.log('Quick reply for message %s with payload %s',
+      messageId, quickReplyPayload);
+
+    var payload_tokens = quickReplyPayload.split(':');
+    var payload_action = payload_tokens[0];
+
+    // We're using predefined metadata payloads for the quickreply messages
+    // so let's use these to understand what should happen next
+    switch (payload_action) {
+      case 'DELAY_SURVEY':
+        sendDelaySurvey(senderID);
+        break;
+      case 'START_SURVEY':
+        sendFirstQuestion(senderID);
+        break;
+      case 'HAPPY':
+        //sendSecondQuestion(senderID);
+        break;
+      case 'STAY':
+        sendThankYou(senderID);
+        break;
+      default:
+        console.log('Quick reply tapped', senderID, quickReplyPayload);
+        break;
+    }
+    return;
+  }
+}
+
+/*
+ * Send a message with Quick Reply buttons.
+ *
+ */
+function sendStartSurvey(recipientId) {
+  request({
+    baseUrl: GRAPH_API_BASE,
+    url: '/' + recipientId,
+    qs: {
+      'fields': 'first_name'
+    },
+    auth: { 'bearer': ACCESS_TOKEN }
+  }, function (error, response, body) {
+    body = JSON.parse(body);
+    var messageData = {
+      recipient: {
+        id: body.id
+      },
+      message: {
+        text: `Hi ${body.first_name}, your opinion matters to us. Do you have a few seconds to answer a quick survey?`,
+        quick_replies: [{
+          content_type: 'text',
+          title: 'Yes',
+          payload: 'START_SURVEY'
+        }, {
+          content_type: 'text',
+          title: 'Not now',
+          payload: 'DELAY_SURVEY'
+        }]
+      }
+    };
+
+    callSendAPI(messageData);
+  });
+}
+
+/*
+ * Send a text message using the Send API.
+ *
+ */
+function sendDelaySurvey(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: "No problem, we'll try again tomorrow"
+    }
+  };
+
+  callSendAPI(messageData);
+}
+
+/*
+ * Send a text message using the Send API.
+ *
+ */
+function sendThankYou(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: 'Thanks for your feedback! If you have any other comments, write them below.'
+    }
+  };
+
+  callSendAPI(messageData);
+}
+
+/*
+ * Call the Send API. The message data goes in the body. If successful, we'll 
+ * get the message id in a response 
+ *
+ */
+function callSendAPI(messageData) {
+  request({
+    baseUrl: GRAPH_API_BASE,
+    url: '/me/messages',
+    qs: { access_token: ACCESS_TOKEN },
+    method: 'POST',
+    json: messageData
+
+  }, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      var recipientId = body.recipient_id;
+      var messageId = body.message_id;
+
+      if (messageId) {
+        console.log('Successfully sent message with id %s to recipient %s', messageId, recipientId);
+      } else {
+        console.log('Successfully called Send API for recipient %s', recipientId);
+      }
+    } else {
+      console.error('Failed calling Send API', response.statusCode, response.statusMessage, body.error);
+    }
+  });
+}
+
 
 // Start server
 // Webhooks must be available via SSL with a certificate signed by a valid

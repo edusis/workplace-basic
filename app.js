@@ -15,6 +15,8 @@ const
   crypto = require('crypto'),
   
   express = require('express');
+const request = require("request");
+
 // Using dotenv to allow local running with environment variables
 require('dotenv').load();
 

@@ -280,7 +280,8 @@ function receivedMessage(event) {
         sendDelaySurvey(senderID);
         break;
       case 'START_SURVEY':
-        sendFirstQuestion(senderID);
+        sendFirstACR(senderID);
+        //sendFirstQuestion(senderID);
         break;
       case 'HAPPY':
         //sendSecondQuestion(senderID);
@@ -339,11 +340,11 @@ function sendStartSurvey(recipientId) {
         text: `Hola ${body.first_name}, Desea leer el ultimo ACR del tablero?`,
         quick_replies: [{
           content_type: 'text',
-          title: 'Yes',
+          title: 'Si',
           payload: 'START_SURVEY'
         }, {
           content_type: 'text',
-          title: 'Not now',
+          title: 'No',
           payload: 'DELAY_SURVEY'
         }]
       }
@@ -358,35 +359,65 @@ function sendStartSurvey(recipientId) {
  * Send a message with Quick Reply buttons.
  *
  */
+function sendFirstACR(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: "" + CHAT_MESSAGE,
+      quick_replies: [{
+        content_type: 'text',
+        title: 'SI',
+        payload: 'ACRYES'
+
+      }, {
+        content_type: 'text',
+        title: 'NO',
+        payload: 'ACRNO'
+      }]
+    }
+  };
+  
+  if (CHAT_MESSAGE)
+    callSendAPI(messageData);
+}
+
 function sendFirstQuestion(recipientId) {
   var messageData = {
     recipient: {
       id: recipientId
     },
     message: {
-      text: "Between 1 and 5, where 5 is 'Very Happy', how happy are you working here?",
-      quick_replies: [{
-        content_type: 'text',
-        title: '☹️ 1',
-        payload: 'HAPPY:1'
-
-      }, {
-        content_type: 'text',
-        title: '2',
-        payload: 'HAPPY:2'
-      }, {
-        content_type: 'text',
-        title: '3',
-        payload: 'HAPPY:3'
-      }, {
-        content_type: 'text',
-        title: '4',
-        payload: 'HAPPY:4'
-      }, {
-        content_type: 'text',
-        title: '5 😃',
-        payload: 'HAPPY:5'
-      }]
+      text:
+        "Between 1 and 5, where 5 is 'Very Happy', how happy are you working here?",
+      quick_replies: [
+        {
+          content_type: "text",
+          title: "☹️ 1",
+          payload: "HAPPY:1"
+        },
+        {
+          content_type: "text",
+          title: "2",
+          payload: "HAPPY:2"
+        },
+        {
+          content_type: "text",
+          title: "3",
+          payload: "HAPPY:3"
+        },
+        {
+          content_type: "text",
+          title: "4",
+          payload: "HAPPY:4"
+        },
+        {
+          content_type: "text",
+          title: "5 😃",
+          payload: "HAPPY:5"
+        }
+      ]
     }
   };
 

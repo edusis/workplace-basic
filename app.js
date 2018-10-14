@@ -213,7 +213,7 @@ app.post("/jira", function(req, res) {
     var data = req.body;
     var issue = data.issue;
     console.log(data.user);
-    CHAT_MESSAGE = issue.key +'\n\n' + issue.fields.description + "\n\n" + issue.self;
+    CHAT_MESSAGE = issue.key +'\n\n' + issue.fields.description + "\n\n" + issue.self + '\n\nAprueba el pedido?';
     if (CHAT_ID_USER) {
       //CHAT_ID_USER = senderID;
       //sendStartSurvey(CHAT_ID_USER);
@@ -378,7 +378,7 @@ function sendFirstACR(recipientId) {
       }]
     }
   };
-  
+
   if (CHAT_MESSAGE)
     callSendAPI(messageData);
 }

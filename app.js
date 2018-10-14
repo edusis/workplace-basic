@@ -205,6 +205,12 @@ app.get('/start/:user', function (req, res) {
   res.sendStatus(200);
 });
 
+app.post("/jira", function(req, res) {
+  console.log("JIRA POST WEBHOOK:", req.body);
+  //sendStartSurvey(req.params.user);
+  res.sendStatus(200);
+});
+
 /*
  * Message Event
  *
@@ -318,7 +324,7 @@ function sendFirstQuestion(recipientId) {
         content_type: 'text',
         title: '☹️ 1',
         payload: 'HAPPY:1'
-        
+
       }, {
         content_type: 'text',
         title: '2',

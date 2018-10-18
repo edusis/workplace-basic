@@ -15,8 +15,10 @@ router.post("/", function(req, res) {
   let toStatus = data.transition.to_status;
   let issueId = data.issue.id;
   let issueCode = data.issue.key;
-  let issueDescription = data.issue.description;
-  let summary = data.issue.summary;
+  let issueDescription = data.issue.fields.description;
+  let summary = data.issue.fields.summary;
+  let issueUrl = data.issue.self;
+  
   
   console.log(fromStatus,toStatus,issueId,issueCode,issueDescription,summary);
   return res.sendStatus(200);

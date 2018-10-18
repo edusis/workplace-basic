@@ -7,12 +7,13 @@ var Sequelize = require('sequelize');
 const Op      = Sequelize.Op;
 var basename  = path.basename(__filename);
 var env       = process.env.NODE_ENV || 'development';
-var config    = require(__dirname + '/../config/database.json')
+var config    = require(__dirname + '/../config/database.js')
 var db        = {};
 
 
 config["operatorsAliases"] = Op;
 
+console.log(config);
 var sequelize = new Sequelize(config.database, config.username, config.password, config);
 
 fs

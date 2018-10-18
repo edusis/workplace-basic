@@ -1,0 +1,28 @@
+{
+    "get_started": {
+        "payload": "{\"event\":\"START_MENU\"}"
+    },
+    "greeting": [
+        {
+            "locale": "default",
+            "text": "Empezar"
+        }
+    ],
+    "persistent_menu": [
+        {
+            "locale": "default",
+            "call_to_actions": [
+                {
+                    "title": "Mi cuenta",
+                    "type": "postback",
+                    "payload": "{\"event\":\"ACCOUNT\"}"
+                },
+                {
+                    "title": "Ver mis Issues",
+                    "type": "postback",
+                    "payload": "{\"event\":\"CHECK_ISSUES\"}"
+                }
+            ]
+        }
+    ]
+}

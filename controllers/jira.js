@@ -24,8 +24,7 @@ router.post("/", function(req, res) {
   
   messageText +=`\n* Proyecto: BMDL`
   
-  console.log(reporter);
-  console.log(assignee);
+  console.log(data.issue);
   if(reporter){
     messageText+=`\n* Solicitante: Claudio Solis`  
   }
@@ -35,7 +34,7 @@ router.post("/", function(req, res) {
   }
   
   if(summary){
-    messageText+=`\n* ${summary}`
+    messageText+=`\n* Resumen: ${summary}`
   }
 
   let testId = "100029033602415"

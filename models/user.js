@@ -2,7 +2,11 @@
 module.exports = (sequelize, DataTypes) => {
   
   var Users = sequelize.define('users', {
-    id          : DataTypes.INTEGER,
+    id          : {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
     workplaceId : DataTypes.STRING,
     email       : DataTypes.STRING,
   },

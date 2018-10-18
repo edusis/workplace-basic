@@ -6,18 +6,21 @@ const router = require("express").Router();
 module.exports = router
 
 router.post("/", function(req, res) {
-  console.log("JIRA WEBHOOK")
   let data  = req.body;
-  let issue = data.issue;
-    
-  let CHAT_MESSAGE = issue.key +
-    "\n\n" +
-    issue.fields.description +
-    "\n\n" +
-    issue.self +
-    "\n\nAprueba el pedido?";
+  if(!data.transition){
+    return res.sendStatus(200)
+  }
   
-  console.log(data);
+  let fromStatus = data.transition.from_status;
+  let toStatus = data.transition.to_status;
+  let issueId = data.issue.id;
+  let issueCode = data.issue.key;
+  let issueDescription = data.issue.description;
+  let summary = data.issue.summary;
+  
+  console.log(fromStatus,toStatus,issueId,issueCode,issueDescription,summary);
+  return res.sendStatus(200);
+  //TODO: AQUI SE DEBE HACER MATCH DEL CORREO DEL USUARIO CON UN ID GUARDADO EN LA BASE DE DATOS Y ENVIARLE UN MENSAJE
   //facebookGraphService.sendTextMessage(CHAT_ID_USER, CHAT_MESSAGE);
 });
 

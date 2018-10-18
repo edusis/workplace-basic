@@ -1,7 +1,9 @@
 "use strict";
 const facebookGraphService = require("../services/facebook_graph");
+const isJson               = require("../utils/isJson");
+const asyncLib             = require("async");
+const router               = require("express").Router();
 
-const router = require("express").Router();
 
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN || null
 
@@ -12,7 +14,7 @@ if(!VERIFY_TOKEN){
 module.exports = router
 
 router.get("/",function(req, res) {
-  let requestHubMode = req.query["hub.mode"];
+  let requestHubMode     = req.query["hub.mode"];
   let requestVerifyToken = req.query["hub.verify_token"]
   
   if (requestHubMode === "subscribe" && requestVerifyToken=== VERIFY_TOKEN) {
@@ -64,10 +66,10 @@ function processPageEvents(data) {
 }
 
 function receivedMessage(event) {
-  var senderID = event.sender.id;
-  var recipientID = event.recipient.id;
+  var senderID      = event.sender.id;
+  var recipientID   = event.recipient.id;
   var timeOfMessage = event.timestamp;
-  var message = event.message;
+  var message       = event.message;
 
   console.log(
     "Received message for user %d and page %d at %d with message:",
@@ -75,12 +77,11 @@ function receivedMessage(event) {
     recipientID,
     timeOfMessage
   );
-  console.log(JSON.stringify(message));
-
-  var isEcho = message.is_echo;
+  
+  var isEcho    = message.is_echo;
   var messageId = message.mid;
-  var appId = message.app_id;
-  var metadata = message.metadata;
+  var appId     = message.app_id;
+  var metadata  = message.metadata;
 
   // You may get a text or attachment but not both
   var quickReply = message.quick_reply;
@@ -134,18 +135,13 @@ function receivedMessage(event) {
   }
 }
 
-function isJson(str){
-     try {
-        return (JSON.parse(str) && !!str);
-    } catch (e) {
-        return false;
-    }
+const postBacks = {
+  "START_MENU"  : require("../postbacks/startMenu"),
+  "CHECK_ISSUES":require("../postbacks/checkIssues"),
+  "VIEW_ISSUE"  :require("../postbacks/viewIssue")
 }
 
 function receivedPostback(event){
-  let senderID      = event.sender.id;
-  let recipientID   = event.recipient.id;
-  let timeOfMessage = event.timestamp;
   let payload       = event.postback.payload || {};
   
   if(!payload){
@@ -158,35 +154,5 @@ function receivedPostback(event){
     return;
   }
   let payloadParsed = JSON.parse(payload);
-  
-  console.info("Received postback for user %d and page %d at %d with message:",senderID,recipientID,timeOfMessage);
-  switch(payloadParsed.event){
-    case "START_MENU":
-      facebookGraphService.sendMenu(senderID);
-      break;
-    case "CHECK_ISSUES":
-      //TODO: AQUI SE DEBE SACAR TODOS LOS ISSUES ASIGNADOS AL USUARIO QUE ESTA PREGUNTANDO Y ENVIARLOS A WP
-      facebookGraphService.sendIssues(senderID,[]);
-      break;
-    case "APPROVE_ISSUE":
-      let issueCodeA = payloadParsed["issueCode"];
-      let messageA = `El ticket ${issueCodeA} ha sido aprobado y se notificara a los interesados, mas detalles en el tablero http://jira.lima.bcp.com.pe`
-      facebookGraphService.sendTextMessage(senderID,messageA)
-      break;
-    case "APPROVE_ISSUE":
-      let issueCodeD = payloadParsed["issueCode"];
-      let messageD = `El ticket ${issueCodeD} ha sido rechazado y se notificara a los interesados, mas detalles en el tablero http://jira.lima.bcp.com.pe`
-      facebookGraphService.sendTextMessage(senderID,messageD)
-      break;
-    case "VIEW_ISSUE":
-      console.log(payloadParsed);
-      let issueCodeV = payloadParsed.params["issueCode"];
-      let issueIdV  = payloadParsed["issueId"];
-      let messageV = `* Codigo: ${issueCodeV}\n* Solicitante: Claudio Solis\n* Proyecto: BMDL\n* AgileOps: Miguel Canchica\n* Descripcion: Generacion de endpoint para NHBK
-      `;
-      facebookGraphService.sendIssueQuickReply(senderID,messageV)
-      break;
-    default:
-      console.warn(`Postback ${payload} payload not supported`);
-  }
+  postBacks[payloadParsed.event](event);
 }

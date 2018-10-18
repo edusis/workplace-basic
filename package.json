@@ -1,20 +1,21 @@
 {
-    "name": "webhooks",
-    "version": "1.0.0",
-    "description": "A basic webhooks implementation sample",
-    "main": "server.js",
-    "dependencies": {
-        "body-parser": "^1.17.2",
-        "crypto": "0.0.3",
-        "dotenv": "^4.0.0",
-        "express": "^4.15.3",
-        "request": "^2.72.0"
-    },
-    "devDependencies": {},
-    "scripts": {
-        "start":"node server.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "author": "",
-    "license": "ISC"
+  "name": "webhooks",
+  "version": "1.0.0",
+  "description": "A basic webhooks implementation sample",
+  "main": "server.js",
+  "dependencies": {
+    "async": "^2.6.1",
+    "body-parser": "^1.17.2",
+    "crypto": "0.0.3",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.3",
+    "request": "^2.72.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
 }

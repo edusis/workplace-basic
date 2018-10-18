@@ -17,14 +17,15 @@ router.post("/", function(req, res) {
   let issueCode  = data.issue.key;
   let summary    = data.issue.fields.summary;
   let issueUrl   = data.issue.self;
-  let reporter   = data.issue.reporter;
-  let assignee   = data.issue.assignee;
+  let reporter   = data.issue.fields.reporter;
+  let assignee   = data.issue.fields.assignee;
   
   let messageText = `* Codigo: ${issueCode}`
   
   messageText +=`\n* Proyecto: BMDL`
   
-  console.log(data.issue);
+  console.log(data.issue.fields);
+  
   if(reporter){
     messageText+=`\n* Solicitante: Claudio Solis`  
   }

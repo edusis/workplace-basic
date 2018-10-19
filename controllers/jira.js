@@ -44,7 +44,7 @@ router.post("/", function(req, res) {
   //TODO: AQUI SE DEBE HACER MATCH DEL CORREO DEL USUARIO CON UN ID GUARDADO EN LA BASE DE DATOS Y ENVIARLE UN MENSAJE
   //userService.getUserByEmail()..;
   console.log(reporter);
-  console.log(creator);
+  console.log(assignee);
   console.log(fromStatus,toStatus,issueId,issueCode,summary);
   
   facebookGraphService.sendIssueQuickReply(testId, messageText);

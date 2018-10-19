@@ -421,7 +421,7 @@ FacebookGraph.prototype.sendIssue = function(recipientId, rawIssues){
   callSendAPI(messageData);
 }
 
-FacebookGraph.prototype.sendIssueQuickReply = function(recipientId,messageText,issueId){
+FacebookGraph.prototype.sendIssueQuickReply = function(recipientId,messageText,issueId,issueCode){
     
    let messageData = {
     "recipient":{
@@ -433,17 +433,17 @@ FacebookGraph.prototype.sendIssueQuickReply = function(recipientId,messageText,i
         {
           "content_type":"text",
           "title":"Aprobar",
-          "payload":`{\"event\":\"QR_APPROVE_ISSUE\",\"params\":{\"issueId\":${issueId}}}`,
+          "payload":`{\"event\":\"QR_APPROVE_ISSUE\",\"params\":{\"issueId\":\"${issueId}\",\"issueCode\":\"${issueCode}\"}}`,
         },
         {
           "content_type":"text",
           "title":"Rechazar",
-          "payload":`{\"event\":\"QR_DECLINE_ISSUE\",\"params\":{\"issueId\":${issueId}}}`,
+          "payload":`{\"event\":\"QR_DECLINE_ISSUE\",\"params\":{\"issueCode\":\"${issueCode}\"}}`,
         },
         {
           "content_type":"text",
           "title":"Cancelar",
-          "payload":`{\"event\":\"QR_CANCEL\",\"params\":{\"issueId\":${issueId}}}`,
+          "payload":`{\"event\":\"QR_CANCEL\",\"params\":{\"issueCode\":\"${issueCode}\"}}`,
         }
       ]
     }

@@ -22,7 +22,6 @@ router.post("/", function(req, res) {
   
   let messageText = "Tienes un nuevo issue pendiente de aprobacion \n"
   
-  console.log(data.issue.fields);
   if(issueCode){
     messageText+=`* Codigo: ${issueCode}`
   }
@@ -47,7 +46,7 @@ router.post("/", function(req, res) {
   console.log(assignee);
   console.log(fromStatus,toStatus,issueId,issueCode,summary);
   
-  facebookGraphService.sendIssueQuickReply(testId, messageText);
+  facebookGraphService.sendIssueQuickReply(testId, messageText,issueId,issueCode);
   
   return res.sendStatus(200);
 });

@@ -438,12 +438,12 @@ FacebookGraph.prototype.sendIssueQuickReply = function(recipientId,messageText,i
         {
           "content_type":"text",
           "title":"Rechazar",
-          "payload":`{\"event\":\"QR_DECLINE_ISSUE\",\"params\":{\"issueCode\":\"${issueCode}\"}}`,
+          "payload":`{\"event\":\"QR_DECLINE_ISSUE\",\"params\":{\"issueId\":\"${issueId}\",\"issueCode\":\"${issueCode}\"}}`,
         },
         {
           "content_type":"text",
           "title":"Cancelar",
-          "payload":`{\"event\":\"QR_CANCEL\",\"params\":{\"issueCode\":\"${issueCode}\"}}`,
+          "payload":`{\"event\":\"QR_CANCEL\",\"params\":{\"issueId\":\"${issueId}\",\"issueCode\":\"${issueCode}\"}}`,
         }
       ]
     }

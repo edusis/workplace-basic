@@ -12,5 +12,5 @@ module.exports = function(event){
     
     let messageV      = `* Codigo: ${issueCodeV}\n* Solicitante: Claudio Solis\n* Proyecto: BMDL\n* AgileOps: Miguel Canchica\n* Descripcion: Generacion de endpoint para NHBK`;
     
-    facebookGraphService.sendIssueQuickReply(senderID,messageV)
+    facebookGraphService.sendIssueQuickReply(senderID,messageV,issueIdV,issueCodeV)
 }

@@ -4,12 +4,23 @@ const isJson               = require("../utils/isJson");
 const asyncLib             = require("async");
 const router               = require("express").Router();
 
-
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN || null
 
 if(!VERIFY_TOKEN){
   throw new Error("Es necesario la variable de entorno VERIFY_TOKEN")
 }
+
+const postBacks = {
+  "START_MENU"  : require("../postbacks/startMenu"),
+  "CHECK_ISSUES":require("../postbacks/checkIssues"),
+  "VIEW_ISSUE"  :require("../postbacks/viewIssue")
+}
+
+const quickReplies = {
+  "QR_APPROVE_ISSUE": require("../quickreplies/qr_approve_issue.js"),
+  "QR_DECLINE_ISSUE": require("../quickreplies/qr_decline_issue.js")
+}
+
 
 module.exports = router
 
@@ -66,79 +77,38 @@ function processPageEvents(data) {
 }
 
 function receivedMessage(event) {
-  var senderID      = event.sender.id;
-  var recipientID   = event.recipient.id;
-  var timeOfMessage = event.timestamp;
-  var message       = event.message;
+  let senderID      = event.sender.id;
+  let recipientID   = event.recipient.id;
+  let timeOfMessage = event.timestamp;
+  let message       = event.message;
 
-  console.log(
-    "Received message for user %d and page %d at %d with message:",
-    senderID,
-    recipientID,
-    timeOfMessage
-  );
+  console.log(`Received message for user ${senderID} and page ${recipientID} at ${timeOfMessage} with message`);
   
-  var isEcho    = message.is_echo;
-  var messageId = message.mid;
-  var appId     = message.app_id;
-  var metadata  = message.metadata;
-
-  // You may get a text or attachment but not both
-  var quickReply = message.quick_reply;
+  let isEcho    = message.is_echo;
+  let messageId = message.mid;
+  let appId     = message.app_id;
+  let metadata  = message.metadata;
+  
+  let quickReply = message.quick_reply;
 
   if (isEcho) {
-    // Just logging message echoes to console
-    console.log(
-      "Received echo for message %s and app %d with metadata %s",
-      messageId,
-      appId,
-      metadata
-    );
+    console.log(`Received echo for message ${messageId} and app ${appId} with metadata ${metadata}`);
     return;
-  } else if (quickReply) {
-    var quickReplyPayload = quickReply.payload;
-    console.log(
-      "Quick reply for message %s with payload %s",
-      messageId,
-      quickReplyPayload
-    );
+  } 
+  
+  if (quickReply) {
+  
+    console.log(`Quick reply for message ${messageId} with payload ${quickReply.payload}`);
     
-    
-    if(!isJson(quickReplyPayload)){
-      console.log("PAYLOAD no es JSON",quickReplyPayload);
+    if(!isJson(quickReply.payload)){
+      console.log("Quick reply payload no es json",quickReply.payload);
       return;
     }
     
-    let quickReplyPayloadParsed = JSON.parse(quickReplyPayload);
-    
-    switch(quickReplyPayloadParsed.event){
-      case "QR_APPROVE_ISSUE":
-        let issueCodeA = quickReplyPayloadParsed.params.issueCode;
-        let messageA = `El ticket ${issueCodeA} ha sido aprobado y se notificara a los interesados, mas detallers en el tablero http://jira.lima.bcp.com.pe`
-        facebookGraphService.sendTextMessage(senderID,messageA)
-        break;
-      case "QR_DECLINE_ISSUE":
-        let issueCodeD = quickReplyPayloadParsed.params.issueCode;
-        let messageD = `El ticket ${issueCodeD} ha sido rechazado y se notificara a los interesados, mas detallers en el tablero http://jira.lima.bcp.com.pe`
-        facebookGraphService.sendTextMessage(senderID,messageD)
-        break;
-      default:
-        console.log("Quick reply tapped", senderID, quickReplyPayload);
-        break;
-    }
+    let quickReplyPayloadParsed = JSON.parse(quickReply.payload);
+    quickReplies[quickReplyPayloadParsed.event]()
     return;
-  } else {
-    if (senderID) {
-      var CHAT_ID_USER = senderID;
-      facebookGraphService.sendStartSurvey(senderID);
-    }
   }
-}
-
-const postBacks = {
-  "START_MENU"  : require("../postbacks/startMenu"),
-  "CHECK_ISSUES":require("../postbacks/checkIssues"),
-  "VIEW_ISSUE"  :require("../postbacks/viewIssue")
 }
 
 function receivedPostback(event){

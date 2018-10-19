@@ -2,7 +2,7 @@
 require("dotenv").load();
 const express    = require("express");
 const bodyParser = require("body-parser");
-const setupBot   = require("./services/setup");
+const setupBot   = require("./config/bot");
 
 let app = express();
 

@@ -24,7 +24,16 @@ JiraService.prototype.doTransition = function(issueCode,transitionId,comment,cal
         json:{
             "transition": {
                 "id": transitionId
-            }
+            },
+            "update": {
+                "comment": [
+                    {
+                        "add": {
+                            "body": "Bug has been fixed."
+                        }
+                    }
+                ]
+            }   
         }
     },function(error,response,body){
         if(error){

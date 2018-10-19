@@ -1,9 +1,9 @@
 const request = require("request");
 
 
-const JIRA_SERVER_URL    = "jiraadmin";
+const JIRA_SERVER_URL    = "https://jira.devopsdesa.credito.bcp.com.pe";
 const JIRA_USER_NAME     = "jiraadmin";
-const JIRA_USER_PASSWORD ="https://jira.devopsdesa.credito.bcp.com.pe"
+const JIRA_USER_PASSWORD = "jiraadmin"
 
 
 function JiraService(){

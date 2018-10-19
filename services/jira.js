@@ -15,7 +15,7 @@ JiraService.prototype.doTransition = function(issueCode,transitionId,comment,cal
     console.log(comment,transitionId);
     
     request.post({
-        url : `${JIRA_SERVER_URL}/rest/api/2/issue/${issueCode}/transitions`,
+        url : `${JIRA_SERVER_URL}/rest/api/2/issue/${issueCode}/transitions?expand=transitions.fields`,
         rejectUnauthorized: false,
         auth:{
             "user":JIRA_USER_NAME,

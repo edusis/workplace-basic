@@ -20,14 +20,15 @@ router.post("/", function(req, res) {
   let reporter   = data.issue.fields.reporter;
   let assignee   = data.issue.fields.assignee;
   
-  let messageText = `* Codigo: ${issueCode}`
-  
-  messageText +=`\n* Proyecto: BMDL`
+  let messageText = "Tienes un nuevo issue pendiente de aprobacion \n"
   
   console.log(data.issue.fields);
+  if(issueCode){
+    messageText+=`* Codigo: ${issueCode}`
+  }
   
   if(reporter){
-    messageText+=`\n* Solicitante: Claudio Solis`  
+    messageText+=`\n* Solicitante: ${reporter.displayName}`  
   }
   
   if(assignee){
@@ -42,10 +43,12 @@ router.post("/", function(req, res) {
   
   //TODO: AQUI SE DEBE HACER MATCH DEL CORREO DEL USUARIO CON UN ID GUARDADO EN LA BASE DE DATOS Y ENVIARLE UN MENSAJE
   //userService.getUserByEmail()..;
-  
-  facebookGraphService.sendTextMessage(testId, messageText);
-  
+  console.log(reporter);
+  console.log(creator);
   console.log(fromStatus,toStatus,issueId,issueCode,summary);
+  
+  facebookGraphService.sendIssueQuickReply(testId, messageText);
+  
   return res.sendStatus(200);
 });
 

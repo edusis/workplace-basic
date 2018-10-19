@@ -22,15 +22,6 @@ JiraService.prototype.doTransition = function(issueCode,transitionId,comment,cal
             "password":JIRA_USER_PASSWORD
         },
         json:{
-            "update":{
-                "comment": [
-                    {
-                        "add": {
-                            "body": comment
-                        }
-                    }
-                ]
-            },
             "transition": {
                 "id": transitionId
             }

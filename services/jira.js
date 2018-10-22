@@ -71,6 +71,9 @@ JiraService.prototype.getIssuesPendingToApprove = function(callback){
         if(error){
             return callback(error);
         }else{
+            console.log(response.status);
+            console.log(response.toString());
+            console.log(body);
             if(response.status != 200){
                 return callback(new Error(response.toString()));
             }

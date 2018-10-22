@@ -137,6 +137,4 @@ function receivedPostback(event){
   }else{
       console.error(`La funcion postback ${payloadParsed.event} no esta mapeada`)
   }
-    
-  
 }

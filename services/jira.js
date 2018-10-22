@@ -38,6 +38,7 @@ JiraService.prototype.doTransition = function(issueCode,transitionId,comment,cal
         if(error){
             return callback(error);
         }else{
+            console.log(body);
             return callback(null,response);
         }
     });

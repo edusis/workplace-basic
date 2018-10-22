@@ -2,7 +2,7 @@ const asyncLib             = require("async");
 const jiraService          = require("../services/jira");
 const facebookGraphService = require("../services/facebook_graph");
 
-const TRANSITION_ID = "111";
+const TRANSITION_ID = "131";
 
 module.exports = function(event){
     let senderID      = event.sender.id;

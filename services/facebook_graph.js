@@ -62,6 +62,7 @@ function callSendAPI(messageData,callback) {
   );
 }
 
+/*
 FacebookGraph.prototype.sendStartSurvey = function (recipientId,callback) {
   console.log("sendStartSurvey")
   request(
@@ -106,6 +107,7 @@ FacebookGraph.prototype.sendStartSurvey = function (recipientId,callback) {
     }
   );
 }
+*/
 
 FacebookGraph.prototype.sendTextMessage = function(recipientId, messageText,callback) {
   var messageData = {

@@ -17,8 +17,8 @@ const postBacks = {
 }
 
 const quickReplies = {
-  "QR_APPROVE_ISSUE": require("../quickreplies/qr_approve_issue.js"),
-  "QR_DECLINE_ISSUE": require("../quickreplies/qr_decline_issue.js")
+  "QR_APPROVE_ISSUE": require("../quickreplies/approveIssue.js"),
+  "QR_DECLINE_ISSUE": require("../quickreplies/declineIssue.js")
 }
 
 
@@ -106,7 +106,7 @@ function receivedMessage(event) {
     }
     
     let quickReplyPayloadParsed = JSON.parse(quickReply.payload);
-    quickReplies[quickReplyPayloadParsed.event]()
+    quickReplies[quickReplyPayloadParsed.event](event)
     return;
   }
 }
@@ -123,6 +123,7 @@ function receivedPostback(event){
     console.log("PAYLOAD no es JSON",payload);
     return;
   }
+  
   let payloadParsed = JSON.parse(payload);
   postBacks[payloadParsed.event](event);
 }

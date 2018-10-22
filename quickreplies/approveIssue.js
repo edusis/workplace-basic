@@ -4,18 +4,22 @@ const facebookGraphService = require("../services/facebook_graph");
 
 const TRANSITION_ID = "111";
 
-module.exports = function(event,issueCode,issueLink){
-    let senderID        = event.sender.id;
-    let recipientID     = event.recipient.id;
-    let timeOfMessage   = event.timestamp;
+module.exports = function(event){
+    let senderID      = event.sender.id;
+    let payload       = event.payload;
     
+    let payloadParsed = JSON.parse(payload);
+    let issueCode    = payloadParsed.params["issueCode"];
+    let issueId      = payloadParsed["issueId"];
+
     let facebookMessage = `El ticket ${issueCode} ha sido aprobado y se notificara a los interesados, 
-    mas detallers en el tablero ${issueLink}`
+    mas detallers en el tablero http://jira.lima.bcp.com.pe`
     
     asyncLib.waterfall([
         function(next){
             //TODO: AQUI SE DEBE OBTENER LA INFO DEL USUARIO DE ALGUNA FORMA Y PONER EN EL COMENTARIO
-            let comment         = "Se aprobo por seguridad usando Release Bot";
+            //TODO: PARALELALMENTE SE PODRIA SACAR EL ISSUE
+            let comment = "Se aprobo por seguridad usando Release Bot";
             return next(null,comment);
         },
         function(comment,next){

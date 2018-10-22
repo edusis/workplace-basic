@@ -1,5 +1,5 @@
 "use strict";
-const facebookGraphService = require("./facebook_graph");
+const facebookGraphService = require("../services/facebook_graph");
 const botProperties = require("../data/bot_properties.json");
 const request = require("request");
 

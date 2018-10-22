@@ -17,7 +17,7 @@ module.exports = function(event){
     ],
     function(error,response){
         if(error){
-            console.error(error);
+            //console.error(error);
         }else{
             console.log("Proceso CheckIssues finalizo correctamente");
         }

@@ -60,23 +60,21 @@ JiraService.prototype.getIssuesPendingToApprove = function(callback){
         url : `${JIRA_SERVER_URL}/rest/api/2/search`,
         rejectUnauthorized: false,
         auth:{
-            "user":JIRA_USER_NAME,
+            "user"    :JIRA_USER_NAME,
             "password":JIRA_USER_PASSWORD
         },
         json:{
             "jql"   : `project = ${JIRA_PROJECT_KEY}+AND+status=${JIRA_PENDING_APPROVE_STATUS}`,
-            "fields": "id,key,self,description,summary,creator,reporter,created"
+            "fields": ["id","key","self","description","summary","creator","reporter","created"]
         }
     },function(error,response,body){
         if(error){
             return callback(error);
         }else{
-            console.log(response.status);
-            console.log(response.toString());
             console.log(body);
-            if(response.status != 200){
+            if(response.statusCode != 200){
                 return callback(new Error(response.toString()));
-            }
+            }   
             return callback(null,body || []);
         }
     });

@@ -11,6 +11,11 @@ module.exports = function(event){
         function(next){
             jiraService.getIssuesPendingToApprove(next)    
         },
+        function(rawIssues,next){
+            //let issues = rawIssues["issues"];
+            //TODO: AQUI SE TIENE QUE MANDAR UN MENSAJE EN CASO HAYA POCOS ISSUES
+            next(null,rawIssues["issues"]);
+        },
         function(rawissues,next){
             facebookGraphService.sendIssues(senderID,rawissues,next);   
         }

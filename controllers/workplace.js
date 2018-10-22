@@ -106,7 +106,13 @@ function receivedMessage(event) {
     }
     
     let quickReplyPayloadParsed = JSON.parse(quickReply.payload);
-    quickReplies[quickReplyPayloadParsed.event](event)
+    
+    if(quickReplies[quickReplyPayloadParsed.event]){
+      quickReplies[quickReplyPayloadParsed.event](event)  
+    }else{
+      console.error(`La funcion quick_reply ${quickReplyPayloadParsed.event} no esta mapeada`)
+    }
+    
     return;
   }
 }
@@ -125,5 +131,12 @@ function receivedPostback(event){
   }
   
   let payloadParsed = JSON.parse(payload);
-  postBacks[payloadParsed.event](event);
+  
+  if(postBacks[payloadParsed.event]){
+    postBacks[payloadParsed.event](event);
+  }else{
+      console.error(`La funcion postback ${payloadParsed.event} no esta mapeada`)
+  }
+    
+  
 }

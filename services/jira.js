@@ -1,5 +1,5 @@
 const request = require("request");
-
+const noop    = require("../utils/noop");
 
 const JIRA_SERVER_URL    = "https://jira.devopsdesa.credito.bcp.com.pe";
 const JIRA_USER_NAME     = "jiraadmin";
@@ -11,8 +11,7 @@ function JiraService(){
 }
 
 JiraService.prototype.doTransition = function(issueCode,transitionId,comment,callback){
-    console.log(JIRA_USER_NAME,JIRA_USER_PASSWORD);
-    console.log(comment,transitionId);
+    callback = callback || noop;
     
     request.post({
         url : `${JIRA_SERVER_URL}/rest/api/2/issue/${issueCode}/transitions?expand=transitions.fields`,
@@ -29,7 +28,7 @@ JiraService.prototype.doTransition = function(issueCode,transitionId,comment,cal
                 "comment": [
                     {
                         "add": {
-                            "body": "Bug has been fixed."
+                            "body": comment
                         }
                     }
                 ]
@@ -39,8 +38,6 @@ JiraService.prototype.doTransition = function(issueCode,transitionId,comment,cal
         if(error){
             return callback(error);
         }else{
-            console.log(response);
-            console.log(body);
             return callback(null,response);
         }
     });

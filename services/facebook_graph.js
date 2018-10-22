@@ -1,4 +1,5 @@
-const request    = require("request");
+const noop    = require("../utils/noop");
+const request = require("request");
 
 const GRAPH_API_BASE = "https://graph.facebook.com/v2.6";
 const ACCESS_TOKEN   = process.env.ACCESS_TOKEN || null
@@ -15,12 +16,16 @@ module.exports = new FacebookGraph()
 FacebookGraph.prototype.ACCESS_TOKEN = ACCESS_TOKEN;
 FacebookGraph.prototype.GRAPH_API_BASE = GRAPH_API_BASE;
 
-function callSendAPI(messageData) {
+function callSendAPI(messageData,callback) {
+  callback = callback || noop;
+  
   request(
     {
       baseUrl: GRAPH_API_BASE,
       url: "/me/messages",
-      qs: { access_token: ACCESS_TOKEN },
+      qs: { 
+        access_token: ACCESS_TOKEN
+      },
       method: "POST",
       json: messageData
     },
@@ -41,6 +46,8 @@ function callSendAPI(messageData) {
             recipientId
           );
         }
+        
+        return callback();
       } else {
         console.error(
           "Failed calling Send API",
@@ -48,108 +55,14 @@ function callSendAPI(messageData) {
           response.statusMessage,
           body.error
         );
+        
+        return callback(error);
       }
     }
   );
 }
 
-
-FacebookGraph.prototype.sendDelaySurvey= function(recipientId) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      text: "No problem, we'll try again tomorrow"
-    }
-  };
-
-  callSendAPI(messageData);
-}
-
-
-FacebookGraph.prototype.sendThankYou = function(recipientId) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      text:
-        "Thanks for your feedback! If you have any other comments, write them below."
-    }
-  };
-
-  callSendAPI(messageData);
-}
-
-
-FacebookGraph.prototype.sendFirstQuestion = function (recipientId) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      text:
-        "Between 1 and 5, where 5 is 'Very Happy', how happy are you working here?",
-      quick_replies: [
-        {
-          content_type: "text",
-          title: "☹️ 1",
-          payload: "HAPPY:1"
-        },
-        {
-          content_type: "text",
-          title: "2",
-          payload: "HAPPY:2"
-        },
-        {
-          content_type: "text",
-          title: "3",
-          payload: "HAPPY:3"
-        },
-        {
-          content_type: "text",
-          title: "4",
-          payload: "HAPPY:4"
-        },
-        {
-          content_type: "text",
-          title: "5 😃",
-          payload: "HAPPY:5"
-        }
-      ]
-    }
-  };
-
-  callSendAPI(messageData);
-}
-
-FacebookGraph.prototype.sendFirstACR = function (recipientId) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      text: "" + "hello",
-      quick_replies: [
-        {
-          content_type: "text",
-          title: "SI",
-          payload: "ACRYES"
-        },
-        {
-          content_type: "text",
-          title: "NO",
-          payload: "ACRNO"
-        }
-      ]
-    }
-  };
-
-  callSendAPI(messageData);
-}
-
-FacebookGraph.prototype.sendStartSurvey = function (recipientId) {
+FacebookGraph.prototype.sendStartSurvey = function (recipientId,callback) {
   console.log("sendStartSurvey")
   request(
     {
@@ -189,12 +102,12 @@ FacebookGraph.prototype.sendStartSurvey = function (recipientId) {
         }
       };
 
-      callSendAPI(messageData);
+      callSendAPI(messageData,callback);
     }
   );
 }
 
-FacebookGraph.prototype.sendTextMessage = function(recipientId, messageText) {
+FacebookGraph.prototype.sendTextMessage = function(recipientId, messageText,callback) {
   var messageData = {
     recipient: {
       id: recipientId
@@ -205,11 +118,11 @@ FacebookGraph.prototype.sendTextMessage = function(recipientId, messageText) {
     }
   };
 
-  callSendAPI(messageData);
+  callSendAPI(messageData,callback);
 }
 
 
-FacebookGraph.prototype.sendMenu = function(recipientId){
+FacebookGraph.prototype.sendMenu = function(recipientId,callback){
   let messageData = {
   "recipient":{
     "id":recipientId
@@ -236,11 +149,11 @@ FacebookGraph.prototype.sendMenu = function(recipientId){
     }
   }
 }
-  callSendAPI(messageData);
+  callSendAPI(messageData,callback);
 }
 
 
-FacebookGraph.prototype.sendIssues = function(recipientId, rawIssues){
+FacebookGraph.prototype.sendIssues = function(recipientId, rawIssues,callback){
     
    let messageData = {
   "recipient":{
@@ -326,13 +239,10 @@ FacebookGraph.prototype.sendIssues = function(recipientId, rawIssues){
     }
   }
 }
-  callSendAPI(messageData);
+  callSendAPI(messageData,callback);
 }
 
-
-
-
-FacebookGraph.prototype.sendIssue = function(recipientId, rawIssues){
+FacebookGraph.prototype.sendIssue = function(recipientId, rawIssues,callback){
     
    let messageData = {
   "recipient":{
@@ -418,10 +328,10 @@ FacebookGraph.prototype.sendIssue = function(recipientId, rawIssues){
     }
   }
 }
-  callSendAPI(messageData);
+  callSendAPI(messageData,callback);
 }
 
-FacebookGraph.prototype.sendIssueQuickReply = function(recipientId,messageText,issueId,issueCode){
+FacebookGraph.prototype.sendIssueQuickReply = function(recipientId,messageText,issueId,issueCode,callback){
     
    let messageData = {
     "recipient":{
@@ -448,7 +358,7 @@ FacebookGraph.prototype.sendIssueQuickReply = function(recipientId,messageText,i
       ]
     }
   }
-  callSendAPI(messageData);
+  callSendAPI(messageData,callback);
 }
 
 

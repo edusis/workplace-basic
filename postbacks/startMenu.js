@@ -7,6 +7,6 @@ module.exports = function(event){
     let recipientID   = event.recipient.id;
     let timeOfMessage = event.timestamp;
     
-    userService.registerUser();
+    //userService.registerUser();
     facebookGraphService.sendMenu(senderID);
 }

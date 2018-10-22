@@ -28,7 +28,7 @@ Transformers.prototype.rawIssuesToFacebook = function(rawIssues){
                 }
             ]
         }
-    }) ;
+    });
     
     return transformed;
 }

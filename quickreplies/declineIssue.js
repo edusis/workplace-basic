@@ -7,7 +7,7 @@ const TRANSITION_ID = "111";
 
 module.exports = function(event){
     let senderID      = event.sender.id;
-    let payload       = event.payload;
+    let payload       = event.quick_reply.payload;
     
     let payloadParsed = JSON.parse(payload);
     let issueCode    = payloadParsed.params["issueCode"];

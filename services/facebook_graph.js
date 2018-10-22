@@ -1,5 +1,7 @@
-const noop    = require("../utils/noop");
-const request = require("request");
+const noop         = require("../utils/noop");
+const transformers = require("../transformers");
+const request      = require("request");
+
 
 const GRAPH_API_BASE = "https://graph.facebook.com/v2.6";
 const ACCESS_TOKEN   = process.env.ACCESS_TOKEN || null
@@ -156,91 +158,21 @@ FacebookGraph.prototype.sendMenu = function(recipientId,callback){
 
 
 FacebookGraph.prototype.sendIssues = function(recipientId, rawIssues,callback){
-    
-   let messageData = {
-  "recipient":{
-    "id":recipientId
-  },
-  "message":{
-    "attachment":{
-      "type":"template",
-      "payload":{
-        "template_type":"generic",
-        "elements":[
-           {
-            "title":"BMDL | ACR-1",
-            "subtitle":"Generacion de Endpoint para NHBK",
-            "buttons":[
-              /*
-              {
-                "type":"postback",
-                "title":"Aprobar",
-                "payload":"{'event':'APPROVE','params':{'issueId':1231,'issueCode':'ACR-1'}}"
-              },
-              {
-                "type":"postback",
-                "title":"Rechazar",
-                "payload":"{'event':'DECLINE','params':{'issueId':1231,'issueCode':'ACR-1'}}"
-              },
-              */
-              {
-                "type":"postback",
-                "title":"Ver detalle",
-                "payload":"{\"event\":\"VIEW_ISSUE\",\"params\":{\"issueId\":1231,\"issueCode\":\"ACR-1\"}}"
-              } 
-            ]      
-          },
-           {
-            "title":"BMDL | ACR-2",
-            "subtitle":"Creacion de contenedor con SQL Server Client",
-            "buttons":[
-              /*
-              {
-                "type":"postback",
-                "title":"Aprobar",
-                "payload":"{'event':'APPROVE','params':{'issueId':1231,'issueCode':'ACR-1'}}"
-              },
-              {
-                "type":"postback",
-                "title":"Rechazar",
-                "payload":"{'event':'DECLINE','params':{'issueId':1231,'issueCode':'ACR-1'}}"
-              },
-              */
-              {
-                "type":"postback",
-                "title":"Ver detalle",
-                "payload":"{\"event\":\"VIEW_ISSUE\",\"params\":{\"issueId\":1231,\"issueCode\":\"ACR-2\"}}"
-              } 
-            ]      
-          },
-           {
-            "title":"BMDL | ACR-3",
-            "subtitle":"Reinicio de JIRA para la sincronizacion de usuarios",
-            "buttons":[
-              /*
-              {
-                "type":"postback",
-                "title":"Aprobar",
-                "payload":"{'event':'APPROVE','params':{'issueId':1231,'issueCode':'ACR-1'}}"
-              },
-              {
-                "type":"postback",
-                "title":"Rechazar",
-                "payload":"{'event':'DECLINE','params':{'issueId':1231,'issueCode':'ACR-1'}}"
-              },
-              */
-              {
-                "type":"postback",
-                "title":"Ver detalle",
-                "payload":"{\"event\":\"VIEW_ISSUE\",\"params\":{\"issueId\":1231,\"issueCode\":\"ACR-3\"}}"
-              } 
-            ]      
-          }
-        ]
+  let elements   = transformers.rawIssuesToFacebook(rawIssues);
+  let messageData= {
+    "recipient":{
+      "id":recipientId
+    },
+    "message":{
+      "attachment":{
+        "type":"template",
+        "payload":{
+          "template_type":"generic",
+          "elements"     :elements
+        }
       }
     }
   }
-}
   callSendAPI(messageData,callback);
 }
 

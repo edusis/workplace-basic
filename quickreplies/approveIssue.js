@@ -32,6 +32,9 @@ module.exports = function(event){
     ],function(err){
         if(err){
             console.error(err);
+            //TODO: OCURRIO UN ERROR, SE DEBE INFORMAR AL USUARIO
+        }else{
+            console.log("Se termino de ejecutar el proceso de aprobacion");
         }
     });
 }

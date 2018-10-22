@@ -16,17 +16,15 @@ module.exports = function(event){
     let facebookMessage = `El ticket ${issueCode} ha sido aprobado y se notificara a los interesados, 
     mas detallers en el tablero http://jira.lima.bcp.com.pe`
     
-    let comment = "Se rechazo por seguridad usando Release Bot";
-    
     asyncLib.waterfall([
         function(next){
             //TODO: AQUI SE DEBE OBTENER LA INFO DEL USUARIO DE ALGUNA FORMA Y PONER EN EL COMENTARIO
             //TODO: PARALELALMENTE SE PODRIA SACAR EL ISSUE
-            let comment = "Se aprobo por seguridad usando Release Bot";
+            let comment = "Se rechazo por seguridad usando Release Bot";
             return next(null,comment);
         },
         function(comment,next){
-            return jiraService.doTransition(issueCode,TRANSITION_ID,comment);
+            return jiraService.doTransition(issueCode,TRANSITION_ID,comment,next);
         },
         function(response,next){
             //TODO: AQUI SE DEBE ENVIAR EL MENSAJE DE CONFIRMACION AL USUARIO     

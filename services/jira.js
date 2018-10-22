@@ -64,7 +64,7 @@ JiraService.prototype.getIssuesPendingToApprove = function(callback){
             "password":JIRA_USER_PASSWORD
         },
         json:{
-            "jql"   : `project = ${JIRA_PROJECT_KEY}+AND+status=${JIRA_PENDING_APPROVE_STATUS}`,
+            "jql"   : `project = ${JIRA_PROJECT_KEY}\+AND\+status=${JIRA_PENDING_APPROVE_STATUS}`,
             "fields": ["id","key","self","description","summary","creator","reporter","created"]
         }
     },function(error,response,body){
@@ -73,7 +73,7 @@ JiraService.prototype.getIssuesPendingToApprove = function(callback){
         }else{
             console.log(body);
             if(response.statusCode != 200){
-                return callback(new Error(response.toString()));
+                return callback(new Error("No se pudieron obtener los issues pendientes a aprobacion"));
             }   
             return callback(null,body || []);
         }

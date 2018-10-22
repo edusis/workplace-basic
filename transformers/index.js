@@ -12,7 +12,7 @@ Transformers.prototype.rawIssuesToFacebook = function(rawIssues){
         let payload = {
             "event":"VIEW_ISSUE",
             "params":{
-                "issueId":issueId,
+                "issueId"  :issueId,
                 "issueCode":issueCode
             }
         }
@@ -30,3 +30,5 @@ Transformers.prototype.rawIssuesToFacebook = function(rawIssues){
         }
     });
 }
+
+module.exports = new Transformers();

@@ -23,7 +23,7 @@ module.exports = function(event){
             return next(null,comment);
         },
         function(comment,next){
-            return jiraService.doTransition(issueCode,TRANSITION_ID,comment);
+            return jiraService.doTransition(issueCode,TRANSITION_ID,comment,next);
         },
         function(response,next){
             //TODO: AQUI SE DEBE ENVIAR EL MENSAJE DE CONFIRMACION AL USUARIO     

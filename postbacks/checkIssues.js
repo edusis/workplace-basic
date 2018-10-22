@@ -12,6 +12,8 @@ module.exports = function(event){
             jiraService.getIssuesPendingToApprove(next)    
         },
         function(rawIssues,next){
+            let total = rawIssues["total"];
+            
             //let issues = rawIssues["issues"];
             //TODO: AQUI SE TIENE QUE MANDAR UN MENSAJE EN CASO HAYA POCOS ISSUES
             next(null,rawIssues["issues"]);
@@ -22,7 +24,7 @@ module.exports = function(event){
     ],
     function(error,response){
         if(error){
-            //console.error(error);
+            console.error(error);
         }else{
             console.log("Proceso CheckIssues finalizo correctamente");
         }

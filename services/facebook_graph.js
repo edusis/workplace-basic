@@ -159,6 +159,7 @@ FacebookGraph.prototype.sendMenu = function(recipientId,callback){
 
 FacebookGraph.prototype.sendIssues = function(recipientId, rawIssues,callback){
   let elements   = transformers.rawIssuesToFacebook(rawIssues);
+  console.log(elements);
   let messageData= {
     "recipient":{
       "id":recipientId

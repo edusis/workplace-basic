@@ -80,6 +80,7 @@ JiraService.prototype.getIssuesPendingToApprove = function(callback){
 }
 
 JiraService.prototype.getIssueById = function(issueId,callback){
+    console.log(issueId);
     request.get({
         url : `${JIRA_SERVER_URL}/rest/api/2/issue/${issueId}`,
         rejectUnauthorized: false,
@@ -97,6 +98,7 @@ JiraService.prototype.getIssueById = function(issueId,callback){
         }else{
             console.log(response.statusCode);
             console.log(response.toString());
+            console.log(body);
             return callback(null,body || {});
         }
     });    

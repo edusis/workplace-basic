@@ -188,5 +188,25 @@ FacebookGraph.prototype.sendIssueQuickReply = function(recipientId,rawIssue,mess
   callSendAPI(messageData,callback);
 }
 
+FacebookGraph.prototype.getUser = function(userId,callback){
+   request({
+      baseUrl: GRAPH_API_BASE,
+      url    : `/${userId}`,
+      json   : true,
+      qs     : {
+        fields : "name"
+      },
+      auth   : { 
+        bearer: ACCESS_TOKEN 
+      }
+    },
+    function(error, response, body) {
+      if(error){
+        return callback(error);
+      }else{
+        return callback(null,body)
+      }
+    });
+}
 
 

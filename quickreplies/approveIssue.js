@@ -5,34 +5,39 @@ const facebookGraphService = require("../services/facebook_graph");
 const TRANSITION_ID = "131";
 
 module.exports = function(event){
-    let senderID      = event.sender.id;
+    let senderId      = event.sender.id;
     let payload       = event.message.quick_reply.payload;
     
     let payloadParsed = JSON.parse(payload);
     let issueCode    = payloadParsed.params["issueCode"];
     let issueId      = payloadParsed["issueId"];
 
-    let facebookMessage = `El ticket ${issueCode} ha sido aprobado y se notificara a los interesados, 
-    mas detallers en el tablero http://jira.lima.bcp.com.pe`
+    
     
     asyncLib.waterfall([
         function(next){
-            //TODO: AQUI SE DEBE OBTENER LA INFO DEL USUARIO DE ALGUNA FORMA Y PONER EN EL COMENTARIO
-            //TODO: PARALELALMENTE SE PODRIA SACAR EL ISSUE
-            let comment = "Se aprobo por seguridad usando Release Bot";
-            return next(null,comment);
-        },
-        function(comment,next){
-            return jiraService.doTransition(issueCode,TRANSITION_ID,comment,next);
+            facebookGraphService.getUser(senderId,function(error,user){
+                if(error){
+                    return next(error);
+                }
+                
+                let comment = `Aprobado por ${user.name} usando Release Bot`;
+                return jiraService.doTransition(issueCode,TRANSITION_ID,comment,next);    
+            });
         },
         function(response,next){
-            //TODO: AQUI SE DEBE ENVIAR EL MENSAJE DE CONFIRMACION AL USUARIO     
-            facebookGraphService.sendTextMessage(senderID,facebookMessage,next)
+            jiraService.getIssueById(issueId,function(err,issueRaw){
+                if(err){
+                    return next(err);
+                }
+                
+                let facebookMessage = `El issue ${issueCode} ha sido aprobado y se notificara a los interesados, más detalles en ${issueRaw.self}`
+                return facebookGraphService.sendTextMessage(senderId,facebookMessage,next)
+            });
         }
     ],function(err){
         if(err){
             console.error(err);
-            //TODO: OCURRIO UN ERROR, SE DEBE INFORMAR AL USUARIO
         }else{
             console.log("Se termino de ejecutar el proceso de aprobacion");
         }

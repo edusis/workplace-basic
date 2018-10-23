@@ -95,10 +95,8 @@ JiraService.prototype.getIssueById = function(issueId,callback){
         if(error){
             return callback(error);
         }else{
-            if(response.statusCode != 200){
-                return callback(new Error("No se pudieron obtener los issues pendientes a aprobacion"));
-            }   
-
+            console.log(response.statusCode);
+            console.log(response.toString());
             return callback(null,body || {});
         }
     });    

@@ -11,7 +11,7 @@ module.exports = function(event){
     
     let payloadParsed = JSON.parse(payload);
     let issueCode    = payloadParsed.params["issueCode"];
-    let issueId      = payloadParsed["issueId"];
+    let issueId      = payloadParsed.params["issueId"];
     
     asyncLib.waterfall([
         function(next){

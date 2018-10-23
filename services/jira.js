@@ -83,6 +83,7 @@ JiraService.prototype.getIssueById = function(issueId,callback){
     request.get({
         url : `${JIRA_SERVER_URL}/rest/api/2/issue/${issueId}`,
         rejectUnauthorized: false,
+        json:true,
         auth:{
             "user"    :JIRA_USER_NAME,
             "password":JIRA_USER_PASSWORD

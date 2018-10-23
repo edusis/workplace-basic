@@ -1,3 +1,5 @@
+const jiraService = require("../services/jiraService");
+
 function Transformers(){
     
 }
@@ -65,6 +67,8 @@ Transformers.prototype.rawIssueToQuickReply = function(rawIssue,initMessage){
     if(description){
         messageV+=`* Descripcion: ${description}\n`
     }
+    
+    messageV+=`* Link: ${jiraService.getIssueBrowseLink(issueCode)}`
     
     return {
     "text": messageV,

@@ -1,4 +1,4 @@
-const jiraService = require("../services/jiraService");
+const jiraService = require("../services/jira");
 
 function Transformers(){
     

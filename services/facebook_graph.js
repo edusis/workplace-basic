@@ -143,7 +143,7 @@ FacebookGraph.prototype.sendMenu = function(recipientId,callback){
             "buttons":[
               {
                 "type":"postback",
-                "title":"Ver mis tareas asignadas",
+                "title":"Ver issues pendientes",
                 "payload":"{\"event\":\"CHECK_ISSUES\"}"
               }              
             ]      
@@ -159,7 +159,6 @@ FacebookGraph.prototype.sendMenu = function(recipientId,callback){
 
 FacebookGraph.prototype.sendIssues = function(recipientId, rawIssues,callback){
   let elements   = transformers.rawIssuesToFacebook(rawIssues);
-  console.log(elements);
   let messageData= {
     "recipient":{
       "id":recipientId
@@ -177,122 +176,15 @@ FacebookGraph.prototype.sendIssues = function(recipientId, rawIssues,callback){
   callSendAPI(messageData,callback);
 }
 
-FacebookGraph.prototype.sendIssue = function(recipientId, rawIssues,callback){
-    
-   let messageData = {
-  "recipient":{
-    "id":recipientId
-  },
-  "message":{
-    "attachment":{
-      "type":"template",
-      "payload":{
-        "template_type":"generic",
-        "elements":[
-           {
-            "title":"Proyecto: BMDL | ACR-1",
-            "subtitle":"* Descripcion: Esta es una descripcion \n * Usuario pedido: Aaron Castillo Rodriguez \n * Proyecto: BMDL",
-            "buttons":[
-              /*
-              {
-                "type":"postback",
-                "title":"Aprobar",
-                "payload":"{'event':'APPROVE','params':{'issueId':1231,'issueCode':'ACR-1'}}"
-              },
-              {
-                "type":"postback",
-                "title":"Rechazar",
-                "payload":"{'event':'DECLINE','params':{'issueId':1231,'issueCode':'ACR-1'}}"
-              },
-              */
-              {
-                "type":"postback",
-                "title":"Ver detalle",
-                "payload":"{\"event\":\"VIEW_ISSUE\",\"params\":{\"issueId\":1231,\"issueCode\":\"ACR-1\"}}"
-              } 
-            ]      
-          },
-           {
-            "title":"Proyecto: BMDL | ACR-1",
-            "subtitle":"* Descripcion: Esta es una descripcion \n * Usuario pedido: Aaron Castillo Rodriguez \n * Proyecto: BMDL",
-            "buttons":[
-              /*
-              {
-                "type":"postback",
-                "title":"Aprobar",
-                "payload":"{'event':'APPROVE','params':{'issueId':1231,'issueCode':'ACR-1'}}"
-              },
-              {
-                "type":"postback",
-                "title":"Rechazar",
-                "payload":"{'event':'DECLINE','params':{'issueId':1231,'issueCode':'ACR-1'}}"
-              },
-              */
-              {
-                "type":"postback",
-                "title":"Ver detalle",
-                "payload":"{\"event\":\"VIEW_ISSUE\",\"params\":{\"issueId\":1231,\"issueCode\":\"ACR-2\"}}"
-              } 
-            ]      
-          },
-           {
-            "title":"Proyecto: BMDL | ACR-1",
-            "subtitle":"* Descripcion: Esta es una descripcion \n * Usuario pedido: Aaron Castillo Rodriguez \n * Proyecto: BMDL",
-            "buttons":[
-              /*
-              {
-                "type":"postback",
-                "title":"Aprobar",
-                "payload":"{'event':'APPROVE','params':{'issueId':1231,'issueCode':'ACR-1'}}"
-              },
-              {
-                "type":"postback",
-                "title":"Rechazar",
-                "payload":"{'event':'DECLINE','params':{'issueId':1231,'issueCode':'ACR-1'}}"
-              },
-              */
-              {
-                "type":"postback",
-                "title":"Ver detalle",
-                "payload":"{\"event\":\"VIEW_ISSUE\",\"params\":{\"issueId\":1231,\"issueCode\":\"ACR-3\"}}"
-              } 
-            ]      
-          }
-        ]
-      }
-    }
-  }
-}
-  callSendAPI(messageData,callback);
-}
-
-FacebookGraph.prototype.sendIssueQuickReply = function(recipientId,messageText,issueId,issueCode,callback){
-    
-   let messageData = {
+FacebookGraph.prototype.sendIssueQuickReply = function(recipientId,rawIssue,callback){
+  let transformed = transformers.rawIssueToQuickReply(rawIssue);
+  let messageData = {
     "recipient":{
       "id":recipientId
     },
-    "message":{
-      "text": messageText,
-      "quick_replies":[
-        {
-          "content_type":"text",
-          "title":"Aprobar",
-          "payload":`{\"event\":\"QR_APPROVE_ISSUE\",\"params\":{\"issueId\":\"${issueId}\",\"issueCode\":\"${issueCode}\"}}`,
-        },
-        {
-          "content_type":"text",
-          "title":"Rechazar",
-          "payload":`{\"event\":\"QR_DECLINE_ISSUE\",\"params\":{\"issueId\":\"${issueId}\",\"issueCode\":\"${issueCode}\"}}`,
-        },
-        {
-          "content_type":"text",
-          "title":"Cancelar",
-          "payload":`{\"event\":\"QR_CANCEL\",\"params\":{\"issueId\":\"${issueId}\",\"issueCode\":\"${issueCode}\"}}`,
-        }
-      ]
-    }
+    "message":transformed
   }
+  
   callSendAPI(messageData,callback);
 }
 

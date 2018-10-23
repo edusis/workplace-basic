@@ -18,7 +18,7 @@
                     "payload": "{\"event\":\"ACCOUNT\"}"
                 },
                 {
-                    "title": "Ver mis Issues",
+                    "title": "Ver issues pendientes",
                     "type": "postback",
                     "payload": "{\"event\":\"CHECK_ISSUES\"}"
                 }

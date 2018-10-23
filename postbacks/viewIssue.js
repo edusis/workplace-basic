@@ -17,39 +17,7 @@ module.exports = function(event){
             return jiraService.getIssueById(issueId,next)
         },
         function(rawIssue,next){
-            let issueCode  = rawIssue["key"];
-            let issueId    = rawIssue["id"];
-            let issueLink  = rawIssue["self"];
-            let summary    = rawIssue["fields"]["summary"];
-            let reporter   = rawIssue["fields"]["reporter"];
-            let creator    = rawIssue["fields"]["creator"];
-            let assignee   = rawIssue["fields"]["assignee"];
-            let created_at = rawIssue["fields"]["created"];
-            let description = rawIssue["fields"]["description"];
-            
-            let messageV      = ""
-            
-            if(issueCode){
-                messageV+=`* Codigo: ${issueCode}\n`
-            }
-            
-            if(reporter){
-                messageV+=`* Solicitante: ${reporter.displayName}\n`
-            }
-            
-            if(assignee){
-                messageV+=`* AgileOps: ${assignee.displayName}\n`
-            }
-            
-            if(summary){
-                messageV+=`* Resumen: ${summary}\n`
-            }
-            
-            if(description){
-                messageV+=`* Descripcion: ${description}\n`
-            }
-            
-            facebookGraphService.sendIssueQuickReply(senderID,messageV,issueId,issueCode,next)            
+            return facebookGraphService.sendIssueQuickReply(recipientID,rawIssue,next)            
         }
     ],
     function(err,response){

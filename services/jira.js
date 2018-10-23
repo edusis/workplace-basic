@@ -104,6 +104,9 @@ JiraService.prototype.getIssueById = function(issueId,callback){
     });    
 }
 
+JiraService.prototype.getIssueBrowseLink = function(issueCode){
+    return `${JIRA_SERVER_URL}/browse/${issueCode}`;
+}
 module.exports = new JiraService();
 
 

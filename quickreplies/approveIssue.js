@@ -12,8 +12,6 @@ module.exports = function(event){
     let issueCode    = payloadParsed.params["issueCode"];
     let issueId      = payloadParsed.params["issueId"];
 
-    
-    
     asyncLib.waterfall([
         function(next){
             facebookGraphService.getUser(senderId,function(error,user){
@@ -26,14 +24,9 @@ module.exports = function(event){
             });
         },
         function(response,next){
-            jiraService.getIssueById(issueId,function(err,issueRaw){
-                if(err){
-                    return next(err);
-                }
-                
-                let facebookMessage = `El issue ${issueCode} ha sido aprobado y se notificara a los interesados, más detalles en ${issueRaw.self}`
-                return facebookGraphService.sendTextMessage(senderId,facebookMessage,next)
-            });
+            let issueLink = jiraService.getIssueBrowseLink(issueCode);
+            let facebookMessage = `El issue ${issueCode} ha sido aprobado y se notificara a los interesados, más detalles en ${issueLink}`
+            return facebookGraphService.sendTextMessage(senderId,facebookMessage,next)
         }
     ],function(err){
         if(err){

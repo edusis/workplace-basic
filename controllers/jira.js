@@ -17,7 +17,7 @@ router.post("/", function(req, res) {
 
   let messageText = "Tienes un nuevo issue pendiente de aprobación \n"
   
-  let groupIds = ["100029033602415"]
+  let groupIds = "100029033602415"
   
   //TODO: AQUI SE DEBE HACER MATCH DEL CORREO DEL USUARIO CON UN ID GUARDADO EN LA BASE DE DATOS Y ENVIARLE UN MENSAJE
   //userService.getUserByEmail()..;

@@ -33,8 +33,8 @@ Transformers.prototype.rawIssuesToFacebook = function(rawIssues){
     return transformed;
 }
 
-Transformers.prototype.rawIssueToQuickReply = function(rawIssue){
-  let issueCode   = rawIssue["key"];
+Transformers.prototype.rawIssueToQuickReply = function(rawIssue,initMessage){
+    let issueCode   = rawIssue["key"];
     let issueId     = rawIssue["id"];
     let issueLink   = rawIssue["self"];
     let summary     = rawIssue["fields"]["summary"];
@@ -44,7 +44,7 @@ Transformers.prototype.rawIssueToQuickReply = function(rawIssue){
     let created_at  = rawIssue["fields"]["created"];
     let description = rawIssue["fields"]["description"];
     
-    let messageV      = ""
+    let messageV      = initMessage || ""
     
     if(issueCode){
         messageV+=`* Codigo: ${issueCode}\n`

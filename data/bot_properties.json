@@ -5,18 +5,13 @@
     "greeting": [
         {
             "locale": "default",
-            "text": "Empezar"
+            "text": "Empiez a usar Release Bot para aprobar tus issues"
         }
     ],
     "persistent_menu": [
         {
             "locale": "default",
             "call_to_actions": [
-                {
-                    "title": "Mi cuenta",
-                    "type": "postback",
-                    "payload": "{\"event\":\"ACCOUNT\"}"
-                },
                 {
                     "title": "Ver issues pendientes",
                     "type": "postback",

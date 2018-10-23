@@ -176,8 +176,8 @@ FacebookGraph.prototype.sendIssues = function(recipientId, rawIssues,callback){
   callSendAPI(messageData,callback);
 }
 
-FacebookGraph.prototype.sendIssueQuickReply = function(recipientId,rawIssue,callback){
-  let transformed = transformers.rawIssueToQuickReply(rawIssue);
+FacebookGraph.prototype.sendIssueQuickReply = function(recipientId,rawIssue,messageText,callback){
+  let transformed = transformers.rawIssueToQuickReply(rawIssue,messageText);
   let messageData = {
     "recipient":{
       "id":recipientId

@@ -14,7 +14,7 @@ module.exports = function(event){
             return jiraService.getIssueById(issueId,next)
         },
         function(rawIssue,next){
-            return facebookGraphService.sendIssueQuickReply(senderID,rawIssue,next)            
+            return facebookGraphService.sendIssueQuickReply(senderID,rawIssue,"",next)            
         }
     ],
     function(err,response){

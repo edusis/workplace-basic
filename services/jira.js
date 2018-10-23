@@ -102,7 +102,7 @@ JiraService.prototype.getIssueById = function(issueId,callback){
             }   
             console.log(body["fields"]);
             try{
-                let wat = JSON.parse(body["fields"]);
+                let wat = JSON.parse(body);
                 console.log(wat["summary"]);
             }catch(e){
                 console.error(e);
